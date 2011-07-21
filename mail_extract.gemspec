@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-require File.expand_path('../lib/crash_hook/version', __FILE__)
+require File.expand_path('../lib/mail_extract/version', __FILE__)
 
 Gem::Specification.new do |gem|
   gem.name        = 'mail_extract'
