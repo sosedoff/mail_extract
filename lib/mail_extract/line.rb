@@ -15,6 +15,24 @@ module MailExtract
       detect_type(str)
     end
     
+    # Returns true if line was detected as text
+    #
+    def text?
+      type == :text
+    end
+    
+    # Returns true if line was detected as quote
+    #
+    def quote?
+      type == :quote
+    end
+    
+    # Returns true if line was detected as signature
+    #
+    def signature?
+      type == :signature
+    end
+    
     private
     
     def detect_type(line)
