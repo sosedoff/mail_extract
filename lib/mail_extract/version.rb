@@ -1,3 +1,5 @@
 module MailExtract
-  VERSION = "0.1.0".freeze unless defined? ::MailExtract::VERSION
+  unless defined? ::MailExtract::VERSION
+    VERSION = "0.1.1".freeze
+  end
 end
