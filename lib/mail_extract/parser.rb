@@ -5,7 +5,8 @@ module MailExtract
     attr_reader :body
     
     # Initialize a new MailExtract::Parser object
-    #   text - Email message body
+    #
+    # text - Email message body
     #
     def initialize(text)
       @lines     = []
@@ -35,23 +36,14 @@ module MailExtract
     #
     def parse_line(str)
       line = MailExtract::Line.new(str)
-      if line.type == :quote
-        if @last_type == :text
-          @type = :quote
-        end
-      elsif line.type == :text
-        if @last_type == :quote
-          @type = :text
-        end
-        if @last_type == :signature
-          @type = :signature
-        end
-      elsif line.type == :signature
-        if @last_type == :text
-          @type = :signature
-        elsif @last_type == :quote
-          @type = :quote
-        end
+      if line.quote?
+        if @last_type == :text      ; @type = :quote     ; end
+      elsif line.text?
+        if @last_type == :quote     ; @type = :text      ; end
+        if @last_type == :signature ; @type = :signature ; end
+      elsif line.signature?
+        if @last_type == :text      ; @type = :signature ;
+        elsif @last_type == :quote  ; @type = :quote     ; end
       end
       @last_type = line.type
       @lines << line.body.strip if @type == :text
