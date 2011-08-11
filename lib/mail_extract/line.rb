@@ -37,7 +37,7 @@ module MailExtract
     
     def detect_type(line)
       # Detects the start line of quote text
-      if line.strip =~ /^On/ && line =~ /at [\d:]+/ && line.strip =~ /wrote:?\z/
+      if line.strip =~ /^On\s/i && line =~ /at [\d:]+/ || line.strip =~ />? wrote:\z/
         @type = :quote
         return
       end

@@ -10,4 +10,9 @@ describe 'MailExtract::Parser' do
     body = MailExtract.new(fixture('simple_with_quotes.txt')).body
     body.should == result_fixture('simple_with_quotes.txt')
   end
+  
+  it 'parses a reply email with broken authored line' do
+    body = MailExtract.new(fixture('reply_with_quotes.txt')).body
+    body.should == 'This is a first line of the message'
+  end
 end
