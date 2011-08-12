@@ -7,8 +7,8 @@ module MailExtract
     #
     # @return [MailExtract::Parser]
     #
-    def new(body)
-      MailExtract::Parser.new(body)
+    def new(body, options={})
+      MailExtract::Parser.new(body, options)
     end
   end
 end

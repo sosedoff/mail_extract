@@ -1,17 +1,20 @@
 module MailExtract
   class Line
-    attr_reader :body, :type
+    attr_reader :body, :type, :subtype
     
     PATTERNS = {
-      /^[>]+\s?/    => :quote,
-      /^--/         => :signature,
-      /^-- /        => :signature,
-      /^[_]{2,}\n?/ => :signature,
-      /^[-]{2,}\n?/ => :signature
+      /^[>]+\s?/                     => :quote,
+      /^--/                          => :signature,
+      /^-- /                         => :signature,
+      /^[_]{2,}\n?/                  => :signature,
+      /^[-]{2,}\n?/                  => :signature,
+      /^sent from my (iphone|ipad)/i => :signature 
     }
     
     def initialize(str)
-      @body = str
+      @body    = str
+      @subtype = :none
+      
       detect_type(str)
     end
     
@@ -38,11 +41,13 @@ module MailExtract
     def detect_type(line)
       # Detects the start line of quote text
       if line.strip =~ /^On\s/i && line =~ /at [\d:]+/ || line.strip =~ />? wrote:\z/
-        @type = :quote
+        @type    = :quote
+        @subtype = :start
         return
       end
       
       @type = :text
+      
       PATTERNS.each_pair do |p,t|
         if line =~ p
           @type = t

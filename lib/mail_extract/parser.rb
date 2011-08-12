@@ -6,14 +6,20 @@ module MailExtract
     
     # Initialize a new MailExtract::Parser object
     #
-    # text - Email message body
+    # text    - Email message body
+    # options - Parsing options
     #
-    def initialize(text)
+    # Parsing options include:
+    #   :only_head - Skip the rest of the message after quote start (default: false)
+    #
+    def initialize(text, options={})
       @lines     = []
       @text      = text.strip
       @body      = ""
       @last_type = :text
       @type      = :text
+      @options   = options
+      
       parse
     end
     
@@ -22,13 +28,25 @@ module MailExtract
     # Process email message body
     #
     def parse
+      break_after_quote = @options[:only_head] || false
       scanner = StringScanner.new(@text)
+      
+      # Process until message end
       while str = scanner.scan_until(/\n/)
-        parse_line(str)
+        line = parse_line(str)
+        
+        if break_after_quote
+          break if line.quote? && line.subtype == :start
+        end
       end
-      if (last_line = scanner.rest.to_s).size > 0
-        parse_line(last_line)
+      
+      # Process the rest (if any)
+      if !break_after_quote && @last_type != :quote
+        if (last_line = scanner.rest.to_s).size > 0
+          parse_line(last_line)
+        end
       end
+      
       @body = @lines.join("\n").strip
     end
     
@@ -36,6 +54,7 @@ module MailExtract
     #
     def parse_line(str)
       line = MailExtract::Line.new(str)
+      
       if line.quote?
         if @last_type == :text      ; @type = :quote     ; end
       elsif line.text?
@@ -47,6 +66,8 @@ module MailExtract
       end
       @last_type = line.type
       @lines << line.body.strip if @type == :text
+      
+      line
     end
   end
 end

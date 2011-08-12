@@ -17,7 +17,7 @@ describe 'MailExtract::Parser' do
   end
 
   it 'parses a reply sent via iphone' do
-    body = MailExtract.new(fixture('iphone_with_quotes.txt')).body
-    # body.should == 'Primary reply content'
+    body = MailExtract.new(fixture('iphone_with_quotes.txt'), :only_head => true).body
+    body.should == 'Primary reply content'
   end
 end
