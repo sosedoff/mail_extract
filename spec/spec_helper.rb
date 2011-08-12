@@ -15,3 +15,7 @@ end
 def result_fixture(file)
   fixture("result_#{file}")
 end
+
+def parse_fixture(file)
+  MailExtract.new(fixture(file)).body
+end
