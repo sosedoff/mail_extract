@@ -38,6 +38,14 @@ It removes all quoted text and signatures leaving only original text.
 
     clean_message = MailExtract.new(message).body
 
+### Configuration
+
+If you need to grab only a head part of the message body you need to specify *:only_head* parameter:
+
+    MailExtract.new(message, :only_head => true)
+
+This is extremely useful if you're parsing an email from mobile devices (iphone?) which do not follow the quote pattens.
+
 ## Known issues
 
 - Invalid signature patterns (that does not follow --, ___)
