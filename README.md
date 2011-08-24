@@ -12,37 +12,46 @@ It removes all quoted text and signatures leaving only original text.
 
 ### General usage
 
-    require 'mail_extract'
+```ruby
+require 'mail_extract'
 
-    body = MailExtract::Parser.new('MESSAGE').body
+body = MailExtract::Parser.new('MESSAGE').body
 
-    # or via shortcut
-    body = MailExtract.new('MESSAGE').body
+# or via shortcut
+body = MailExtract.new('MESSAGE').body
+
+# or via another shortcut
+body = MailExtract.parse('MESSAGE')
+```
 
 ### Using with Mail gem
 
-    require 'mail'
-    require 'mail_extract'
+```ruby
+require 'mail'
+require 'mail_extract'
 
-    mail = Mail.read_from_string(YOUR_MESSAGE_BODY)
-    
-    # find only plain-text parts
-    if mail.multipart?
-      part = mail.parts.select { |p| p.content_type =~ /text\/plain/ }.first rescue nil
-      unless part.nil?
-        message = part.body.decoded
-      end
-    else
-      message = part.body.decoded
-    end
+mail = Mail.read_from_string(YOUR_MESSAGE_BODY)
 
-    clean_message = MailExtract.new(message).body
+# find only plain-text parts
+if mail.multipart?
+  part = mail.parts.select { |p| p.content_type =~ /text\/plain/ }.first rescue nil
+  unless part.nil?
+    message = part.body.decoded
+  end
+else
+  message = part.body.decoded
+end
+
+clean_message = MailExtract.new(message).body
+```
 
 ### Configuration
 
 If you need to grab only a head part of the message body you need to specify *:only_head* parameter:
 
-    MailExtract.new(message, :only_head => true)
+```ruby
+MailExtract.new(message, :only_head => true)
+```
 
 This is extremely useful if you're parsing an email from mobile devices (iphone?) which do not follow the quote pattens.
 
