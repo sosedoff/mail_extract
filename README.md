@@ -39,7 +39,7 @@ if mail.multipart?
     message = part.body.decoded
   end
 else
-  message = part.body.decoded
+  message = mail.body.decoded
 end
 
 clean_message = MailExtract.new(message).body
